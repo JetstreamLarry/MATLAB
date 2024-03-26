@@ -1,7 +1,8 @@
-% Reset workspace
 clear
 close all
 clc
+
+format compact
 
 % Choose which operations to perform
 enablePfe = 0;
