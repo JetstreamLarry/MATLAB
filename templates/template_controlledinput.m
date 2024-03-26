@@ -3,31 +3,36 @@ close all
 clc
 format compact
 
-A = [-0.1 -1; 1 0];
-B = [0.9; 0];
-C = [0 1];
-D = 0;
+% State matrices
+%A = ;
+%B = ;
+%C = ;
+%D = ;
+
+% Requirements
+%s_hat = ; % Overshoot
+%t_s = ; % Setting time
+%s_p = ; % Setting percentage +-
 
 damp(A)
 sys = ss(A, B, C, D);
 %step(sys)
 
 % Check reachability
-M_r = ctrb(A,B)
-rho_m = rank(M_r)
+M_r = ctrb(A,B);
+if (rank(M_r) < size(A))
+    return
+end
 
-% Define requirements
-s_hat = 0.10; % Overshoot
-t_s = 6.5; % Setting time
-s_p = 0.02; % Setting percentage
-
-zeta = abs(log(s_hat)) / (sqrt(pi^2 + (log(s_hat)) ^ 2)) % Damping coefficient
-wn = log((s_p) ^ (-1)) / (zeta * t_s) % Natural frequency
+% Compute damping coefficient and natural frequency
+zeta = abs(log(s_hat)) / (sqrt(pi^2 + (log(s_hat)) ^ 2))
+wn = log((s_p) ^ (-1)) / (zeta * t_s)
 
 % Define eigenvalues to assign
 lambda_1 = - zeta * wn + 1i * wn * sqrt(1 - zeta ^ 2);
 lambda_2 = - zeta * wn - 1i * wn * sqrt(1 - zeta ^ 2);
-lambda_des = [lambda_1, lambda_2]
+lambda_3 = - 10 * zeta *wn;
+lambda_des = [lambda_1, lambda_2, lambda_3]
 
 K = place(A, B, lambda_des)
 
@@ -46,13 +51,10 @@ t_sim = linspace(0, 20, 10000); % Simulation time base, use 20 as a limit since 
 [y, t, x] = step(sys_contr, t_sim); % Simulation results
 
 % Plot simulation results
-figure(2),
-subplot(211)
-plot(t, x(:, 1), 'b', 'linew', 1.5)
-grid on, zoom on, hold on, xlabel('t (s)'), ylabel('x_1(t)')
-subplot(212)
-plot(t, x(:, 2), 'b', 'linew', 1.5)
-grid on, zoom on, hold on, xlabel('t (s)'), ylabel('x_2(t)')
+%figure(2),
+%subplot(211)
+%plot(t, x(:, 1), 'b', 'linew', 1.5)
+%grid on, zoom on, hold on, xlabel('t (s)'), ylabel('x_1(t)')
 
 figure (3), plot (t, y, 'b', 'linew', 1.5)
 grid on, zoom on, hold on, xlabel('t (s)'), ylabel ('y(t)')
