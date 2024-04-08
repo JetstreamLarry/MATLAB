@@ -9,11 +9,15 @@ B = [4; -1]
 C = [3 -4]
 D = 7
 
+sys = ss (A, B, C, D);
+
 x0 = [3; -3]
 
 s = tf('s')
-U = 0 % Step a
-% U = 4/s % Step b
+%U = 0 % Step a
+ U = 4/s % Step b
+
+%X = pfe(sys, x0, U)
 
 % Calculate X
 X = zpk(minreal(inv(s*eye(size(A,1))-A)*(B*U+x0),tol))
