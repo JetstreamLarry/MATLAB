@@ -1,4 +1,4 @@
-function sys_contr = ctrlIn (sys, overshoot, settingTime, settingPerc)
+function sysCtrl = ctrlIn (sys, overshoot, settingTime, settingPerc)
     [A, B, C, D] = ssdata (sys);
     eigsDes = zeros(1, size (A, 1));
     
@@ -24,14 +24,14 @@ function sys_contr = ctrlIn (sys, overshoot, settingTime, settingPerc)
     end
 
     % Compute K
-    K = place (A, B, eigsDes);
+    K = place (A, B, eigsDes)
 
     % State matrices and dynamical systems needed to compute N
-    sys_N = ss (A - B * K, B, C, D);
+    sysN = ss (A - B * K, B, C, D);
 
     % Compute N
-    N = 1 / dcgain (sys_N);
+    N = 1 / dcgain (sysN)
 
     % Controlled LTI system
-    sys_contr = ss (A - B * K, B * N, C, D);
+    sysCtrl = ss (A - B * K, B * N, C, D);
 end
