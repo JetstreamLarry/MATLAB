@@ -1,0 +1,12 @@
+clear
+close all
+clc
+format compact
+
+s = tf('s');
+
+c = 
+N = 
+
+q = c^2 / 2N
+
